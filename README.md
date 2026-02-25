@@ -1,3 +1,11 @@
+# NaturAlly
+
+An interactive educational platform for exploring America's national parks through immersive videos — featuring historical figures and face-swapped scenes.
+
+**GitHub:** https://github.com/jeevstruly/NatureAlly
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

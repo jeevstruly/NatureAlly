@@ -1,6 +1,7 @@
 import { fetchParks } from '@/lib/nps';
 import { PAIRINGS } from '@/lib/pairings';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export const metadata = {
   title: 'Explore Parks — NaturAlly',
@@ -39,16 +40,19 @@ export default async function ParksPage() {
             <Link
               key={park.parkCode}
               href={`/parks/${park.parkCode}`}
-              className="group block rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+              className="group block rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--forest)]"
               style={{ backgroundColor: 'white' }}
             >
               {park.images[0] ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={park.images[0].url}
-                  alt={park.images[0].altText}
-                  className="w-full h-48 object-cover"
-                />
+                <div className="relative w-full h-48">
+                  <Image
+                    src={park.images[0].url}
+                    alt={park.images[0].altText || `${park.fullName} — park scenery`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
+                </div>
               ) : (
                 <div
                   className="w-full h-48 flex items-center justify-center text-5xl"

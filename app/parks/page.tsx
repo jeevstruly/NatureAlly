@@ -10,7 +10,7 @@ export const metadata = {
 
 export default async function ParksPage() {
   const { data: parks } = await fetchParks(30);
-  const pairedCodes = new Set(PAIRINGS.map((p) => p.parkCode));
+  const pairedCodes = new Set(PAIRINGS.filter((p) => p.videoReady).map((p) => p.parkCode));
 
   return (
     <div style={{ backgroundColor: 'var(--cream)' }} className="min-h-screen">

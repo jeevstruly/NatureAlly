@@ -16,7 +16,8 @@ export default async function ParkDetailPage({
     fetchEducationPrograms(parkCode),
   ]);
 
-  if (parkResult.status === 'rejected' || !parkResult.value) return notFound();
+  if (parkResult.status === 'rejected') throw parkResult.reason;
+  if (!parkResult.value) return notFound();
   const park = parkResult.value;
 
   const education = educationResult.status === 'fulfilled' ? educationResult.value : [];

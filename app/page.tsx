@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 const steps = [
   {
@@ -37,13 +38,22 @@ export default function Home() {
         >
           Natur<span style={{ color: "var(--forest-light)" }}>Ally</span>
         </span>
-        <button
-          onClick={() => setModalOpen(true)}
-          style={{ backgroundColor: "var(--forest)", color: "white" }}
-          className="px-5 py-2 rounded-full text-sm font-medium transition-opacity hover:opacity-90"
-        >
-          Watch Demo
-        </button>
+        <div className="flex items-center gap-4">
+          <Link
+            href="/parks"
+            style={{ color: "var(--forest)" }}
+            className="text-sm font-medium hover:underline"
+          >
+            Explore Parks
+          </Link>
+          <button
+            onClick={() => setModalOpen(true)}
+            style={{ backgroundColor: "var(--forest)", color: "white" }}
+            className="px-5 py-2 rounded-full text-sm font-medium transition-opacity hover:opacity-90"
+          >
+            Watch Demo
+          </button>
+        </div>
       </nav>
 
       {/* Hero */}

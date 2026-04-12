@@ -24,7 +24,7 @@ export const PAIRINGS: Pairing[] = [
       'https://assets.mixkit.co/videos/2213/2213-720.mp4',
     faceImageUrl:
       'https://raw.githubusercontent.com/jeevstruly/NatureAlly/master/public/faces/john-muir.jpg',
-    videoReady: false,
+    videoReady: true,
   },
   {
     parkCode: 'yell',
@@ -35,7 +35,7 @@ export const PAIRINGS: Pairing[] = [
       'https://assets.mixkit.co/videos/4396/4396-720.mp4',
     faceImageUrl:
       'https://raw.githubusercontent.com/jeevstruly/NatureAlly/master/public/faces/theodore-roosevelt.jpg',
-    videoReady: false,
+    videoReady: true,
   },
   {
     parkCode: 'grca',
@@ -46,7 +46,7 @@ export const PAIRINGS: Pairing[] = [
       'https://assets.mixkit.co/videos/11022/11022-720.mp4',
     faceImageUrl:
       'https://raw.githubusercontent.com/jeevstruly/NatureAlly/master/public/faces/john-wesley-powell.jpg',
-    videoReady: false,
+    videoReady: true,
   },
   {
     parkCode: 'grte',
@@ -57,6 +57,6 @@ export const PAIRINGS: Pairing[] = [
       'https://assets.mixkit.co/videos/4998/4998-720.mp4',
     faceImageUrl:
       'https://raw.githubusercontent.com/jeevstruly/NatureAlly/master/public/faces/ansel-adams.jpg',
-    videoReady: false,
+    videoReady: true,
   },
 ];

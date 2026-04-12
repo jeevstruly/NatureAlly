@@ -60,6 +60,19 @@ async function downloadFile(url: string, destPath: string): Promise<void> {
 }
 
 async function main() {
+  // Pre-flight: verify all source video URLs are direct file URLs
+  const invalidPairings = PAIRINGS.filter(
+    (p) => !p.sourceVideoUrl.includes('.mp4') || p.sourceVideoUrl.includes('view.htm')
+  );
+  if (invalidPairings.length > 0) {
+    console.error('[abort] Some pairings have invalid sourceVideoUrl values (must be direct .mp4 URLs):');
+    for (const p of invalidPairings) {
+      console.error(`  ${p.parkCode}: ${p.sourceVideoUrl}`);
+      console.error(`  → Find a direct URL at: https://developer.nps.gov/api/v1/multimedia/videos?parkCode=${p.parkCode}`);
+    }
+    process.exit(1);
+  }
+
   mkdirSync(OUTPUT_DIR, { recursive: true });
 
   for (const pairing of PAIRINGS) {

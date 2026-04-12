@@ -25,6 +25,9 @@
 .superpowers/
 *.pem
 
+# generated face-swap videos (large binaries — commit intentionally after reviewing)
+public/videos/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

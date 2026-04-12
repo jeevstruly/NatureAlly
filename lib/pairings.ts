@@ -10,6 +10,8 @@ export interface Pairing {
   sourceVideoUrl: string;
   /** Direct URL to a public-domain photo of the historical figure */
   faceImageUrl: string;
+  /** Set to true once the face-swap video has been generated and placed in public/videos/ */
+  videoReady: boolean;
 }
 
 export const PAIRINGS: Pairing[] = [
@@ -23,6 +25,7 @@ export const PAIRINGS: Pairing[] = [
       'https://www.nps.gov/media/video/view.htm?id=B4A4E5D6-1DD8-B71C-07D3EB16D6FA3EC2',
     faceImageUrl:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/John_Muir_by_Carleton_Watkins%2C_c1875.jpg/440px-John_Muir_by_Carleton_Watkins%2C_c1875.jpg',
+    videoReady: false,
   },
   {
     parkCode: 'yell',
@@ -34,6 +37,7 @@ export const PAIRINGS: Pairing[] = [
       'https://www.nps.gov/media/video/view.htm?id=51B86F18-1DD8-B71C-0753D4BBF609B12A',
     faceImageUrl:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/President_Roosevelt_-_Pach_Bros_%28cropped%29.jpg/440px-President_Roosevelt_-_Pach_Bros_%28cropped%29.jpg',
+    videoReady: false,
   },
   {
     parkCode: 'grca',
@@ -45,6 +49,7 @@ export const PAIRINGS: Pairing[] = [
       'https://www.nps.gov/media/video/view.htm?id=60EB1A2A-1DD8-B71C-07D0E7A6D7B1E7C8',
     faceImageUrl:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/John_Wesley_Powell_by_Bell%2C_1871.jpg/440px-John_Wesley_Powell_by_Bell%2C_1871.jpg',
+    videoReady: false,
   },
   {
     parkCode: 'grte',
@@ -56,5 +61,6 @@ export const PAIRINGS: Pairing[] = [
       'https://www.nps.gov/media/video/view.htm?id=7A5C8D3F-1DD8-B71C-07E1A2B3C4D5E6F7',
     faceImageUrl:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Ansel_Adams_and_camera.jpg/440px-Ansel_Adams_and_camera.jpg',
+    videoReady: false,
   },
 ];

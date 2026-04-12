@@ -2,8 +2,6 @@ import { fetchPark, fetchEducationPrograms } from '@/lib/nps';
 import { PAIRINGS } from '@/lib/pairings';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { existsSync } from 'fs';
-import { join } from 'path';
 import Image from 'next/image';
 
 export default async function ParkDetailPage({
@@ -18,14 +16,12 @@ export default async function ParkDetailPage({
     fetchEducationPrograms(parkCode),
   ]);
 
-  if (parkResult.status === 'rejected') notFound();
+  if (parkResult.status === 'rejected' || !parkResult.value) return notFound();
   const park = parkResult.value;
-  if (!park) notFound();
 
   const education = educationResult.status === 'fulfilled' ? educationResult.value : [];
   const pairing = PAIRINGS.find((p) => p.parkCode === parkCode);
-  const videoPath = join(process.cwd(), 'public', 'videos', `${parkCode}.mp4`);
-  const hasVideo = Boolean(pairing) && existsSync(videoPath);
+  const hasVideo = Boolean(pairing?.videoReady);
 
   return (
     <div style={{ backgroundColor: 'var(--cream)' }} className="min-h-screen">
@@ -130,6 +126,7 @@ export default async function ParkDetailPage({
               className="w-full"
               src={`/videos/${parkCode}.mp4`}
               poster={park.images[0]?.url}
+              aria-label={`${pairing.figure} at ${park.fullName}`}
             />
           </section>
         )}

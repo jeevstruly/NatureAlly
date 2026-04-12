@@ -54,6 +54,11 @@ describe('fetchPark', () => {
     const result = await fetchPark('xxxx');
     expect(result).toBeNull();
   });
+
+  it('throws on non-ok response', async () => {
+    mockFetch.mockResolvedValueOnce({ ok: false, status: 401 });
+    await expect(fetchPark('yose')).rejects.toThrow('NPS API error: 401');
+  });
 });
 
 describe('fetchEducationPrograms', () => {
@@ -70,5 +75,10 @@ describe('fetchEducationPrograms', () => {
     const result = await fetchEducationPrograms('yose');
     expect(result).toHaveLength(1);
     expect(result[0].title).toBe('Junior Ranger');
+  });
+
+  it('throws on non-ok response', async () => {
+    mockFetch.mockResolvedValueOnce({ ok: false, status: 500 });
+    await expect(fetchEducationPrograms('yose')).rejects.toThrow('NPS API error: 500');
   });
 });

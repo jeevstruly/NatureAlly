@@ -11,7 +11,7 @@ export interface NpsPark {
   url: string;
 }
 
-interface NpsParksListResponse {
+export interface NpsParksListResponse {
   total: string;
   limit: string;
   start: string;
@@ -26,7 +26,7 @@ export interface NpsEducationProgram {
   url: string;
 }
 
-interface NpsEducationResponse {
+export interface NpsEducationResponse {
   total: string;
   data: NpsEducationProgram[];
 }
@@ -38,7 +38,7 @@ function apiKey(): string {
 export async function fetchParks(limit = 20, start = 0): Promise<NpsParksListResponse> {
   const res = await fetch(
     `${NPS_BASE}/parks?limit=${limit}&start=${start}&api_key=${apiKey()}`,
-    { next: { revalidate: 3600 } } as RequestInit
+    { next: { revalidate: 3600 } }
   );
   if (!res.ok) throw new Error(`NPS API error: ${res.status}`);
   return res.json() as Promise<NpsParksListResponse>;
@@ -47,7 +47,7 @@ export async function fetchParks(limit = 20, start = 0): Promise<NpsParksListRes
 export async function fetchPark(parkCode: string): Promise<NpsPark | null> {
   const res = await fetch(
     `${NPS_BASE}/parks?parkCode=${parkCode}&api_key=${apiKey()}`,
-    { next: { revalidate: 3600 } } as RequestInit
+    { next: { revalidate: 3600 } }
   );
   if (!res.ok) throw new Error(`NPS API error: ${res.status}`);
   const data = (await res.json()) as NpsParksListResponse;
@@ -57,7 +57,7 @@ export async function fetchPark(parkCode: string): Promise<NpsPark | null> {
 export async function fetchEducationPrograms(parkCode: string): Promise<NpsEducationProgram[]> {
   const res = await fetch(
     `${NPS_BASE}/education/programs?parkCode=${parkCode}&limit=10&api_key=${apiKey()}`,
-    { next: { revalidate: 3600 } } as RequestInit
+    { next: { revalidate: 3600 } }
   );
   if (!res.ok) throw new Error(`NPS API error: ${res.status}`);
   const data = (await res.json()) as NpsEducationResponse;

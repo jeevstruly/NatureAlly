@@ -17,10 +17,45 @@ import { PAIRINGS } from '../lib/pairings';
 import { config } from 'dotenv';
 config({ path: join(process.cwd(), '.env.local') });
 
-const FACESWAP_ENDPOINT =
-  'https://api.magicapi.dev/api/v1/magicapi/faceswap-video-v3/faceswap/get-video';
+const FACESWAP_RUN_ENDPOINT =
+  'https://prod.api.market/api/v1/magicapi/faceswap-video-v3/run';
+const FACESWAP_STATUS_ENDPOINT =
+  'https://prod.api.market/api/v1/magicapi/faceswap-video-v3/status';
 
 const OUTPUT_DIR = join(process.cwd(), 'public', 'videos');
+
+async function pollForResult(jobId: string, apiKey: string): Promise<string> {
+  const maxAttempts = 30; // 5 minutes at 10s intervals
+  for (let i = 0; i < maxAttempts; i++) {
+    await new Promise((r) => setTimeout(r, 10000));
+    const res = await fetch(`${FACESWAP_STATUS_ENDPOINT}/${jobId}`, {
+      headers: { 'x-api-market-key': apiKey },
+    });
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Status check error ${res.status}: ${text}`);
+    }
+    const json = (await res.json()) as Record<string, unknown>;
+    const status = json.status as string | undefined;
+    console.log(`  → status: ${status}`);
+
+    if (status === 'COMPLETED' || status === 'SUCCESS') {
+      // Response shape: { output: { video_url: "..." } }
+      const output = json.output as Record<string, unknown> | undefined;
+      const url =
+        (output?.video_url as string | undefined) ??
+        (json.output_url as string | undefined) ??
+        (json.url as string | undefined) ??
+        ((json.output as string[] | undefined)?.[0]);
+      if (!url) throw new Error(`Job completed but no URL: ${JSON.stringify(json)}`);
+      return url;
+    }
+    if (status === 'FAILED' || status === 'ERROR') {
+      throw new Error(`Job failed: ${JSON.stringify(json)}`);
+    }
+  }
+  throw new Error(`Job timed out after ${maxAttempts} attempts`);
+}
 
 async function generateVideo(
   faceImageUrl: string,
@@ -29,15 +64,17 @@ async function generateVideo(
   const apiKey = process.env.FACESWAP_API_KEY;
   if (!apiKey) throw new Error('FACESWAP_API_KEY not set in .env.local');
 
-  const res = await fetch(FACESWAP_ENDPOINT, {
+  const res = await fetch(FACESWAP_RUN_ENDPOINT, {
     method: 'POST',
     headers: {
-      'x-magicapi-key': apiKey,
+      'x-api-market-key': apiKey,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      face_url: faceImageUrl,
-      video_url: sourceVideoUrl,
+      input: {
+        swap_image: faceImageUrl,
+        target_video: sourceVideoUrl,
+      },
     }),
   });
 
@@ -46,10 +83,22 @@ async function generateVideo(
     throw new Error(`FaceSwap API error ${res.status}: ${text}`);
   }
 
-  const json = (await res.json()) as { output_url?: string; url?: string; video_url?: string };
-  const videoUrl = json.output_url ?? json.url ?? json.video_url;
-  if (!videoUrl) throw new Error(`No video URL in response: ${JSON.stringify(json)}`);
-  return videoUrl;
+  const json = (await res.json()) as Record<string, unknown>;
+
+  // Synchronous response — video URL returned immediately
+  const immediate =
+    (json.output_url as string | undefined) ??
+    (json.url as string | undefined) ??
+    (json.video_url as string | undefined) ??
+    ((json.output as string[] | undefined)?.[0]);
+  if (immediate) return immediate;
+
+  // Async response — poll until complete
+  const jobId = json.id as string | undefined;
+  if (!jobId) throw new Error(`Unexpected response (no id, no url): ${JSON.stringify(json)}`);
+
+  console.log(`  → job queued: ${jobId}, polling...`);
+  return pollForResult(jobId, apiKey);
 }
 
 async function downloadFile(url: string, destPath: string): Promise<void> {
@@ -62,7 +111,7 @@ async function downloadFile(url: string, destPath: string): Promise<void> {
 async function main() {
   // Pre-flight: verify all source video URLs are direct file URLs
   const invalidPairings = PAIRINGS.filter(
-    (p) => !p.sourceVideoUrl.includes('.mp4') || p.sourceVideoUrl.includes('view.htm')
+    (p) => !/(\.mp4|\.webm|\.mov|\.avi)(\?|$)/i.test(p.sourceVideoUrl) || p.sourceVideoUrl.includes('view.htm')
   );
   if (invalidPairings.length > 0) {
     console.error('[abort] Some pairings have invalid sourceVideoUrl values (must be direct .mp4 URLs):');

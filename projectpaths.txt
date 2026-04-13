@@ -1,0 +1,13 @@
+App Idea:
+An interactive educational platform where users can learn about national parks through engaging videos, featuring historical figures or even themselves 'face-swapped' into historical scenes or environmental roles.
+
+Key Feature:
+Personalized, AI-generated educational videos with face-swapped characters interacting with national park content.
+
+APIs:
+  • NPS Education API: https://www.nps.gov/subjects/developer/api-documentation.htm#education
+  • Hugging Face AutoTrain: https://huggingface.co/autotrain
+  • FaceSwap Video V3: https://api.market/store/magicapi/faceswap-video-v3
+
+Analysis:
+The APIs can technically integrate, allowing for the creation of unique, personalized educational content. While the immediate business model might be niche, the entertainment and novelty factor has potential.

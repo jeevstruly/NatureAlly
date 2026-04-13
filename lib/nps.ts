@@ -44,6 +44,16 @@ export async function fetchParks(limit = 20, start = 0): Promise<NpsParksListRes
   return res.json() as Promise<NpsParksListResponse>;
 }
 
+export async function fetchParksByCodes(parkCodes: string[]): Promise<NpsPark[]> {
+  const res = await fetch(
+    `${NPS_BASE}/parks?parkCode=${parkCodes.join(',')}&limit=${parkCodes.length}&api_key=${apiKey()}`,
+    { next: { revalidate: 3600 } }
+  );
+  if (!res.ok) throw new Error(`NPS API error: ${res.status}`);
+  const data = (await res.json()) as NpsParksListResponse;
+  return data.data;
+}
+
 export async function fetchPark(parkCode: string): Promise<NpsPark | null> {
   const res = await fetch(
     `${NPS_BASE}/parks?parkCode=${parkCode}&api_key=${apiKey()}`,

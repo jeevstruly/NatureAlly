@@ -118,9 +118,20 @@ export default async function ParkDetailPage({
               >
                 {pairing.figure}
               </h2>
-              <p style={{ color: 'rgba(255,255,255,0.7)' }} className="text-base leading-relaxed">
+              <p style={{ color: 'rgba(255,255,255,0.7)' }} className="text-base leading-relaxed mb-5">
                 {pairing.figureBlurb}
               </p>
+              <Link
+                href={`/parks/${parkCode}/experience`}
+                className="inline-block rounded-xl px-6 py-3 text-sm font-semibold"
+                style={{
+                  backgroundColor: 'var(--forest-light)',
+                  color: 'white',
+                  fontFamily: 'var(--font-outfit), Outfit, sans-serif',
+                }}
+              >
+                Step into the scene →
+              </Link>
             </div>
             <video
               controls
